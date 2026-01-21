@@ -1,47 +1,122 @@
-# 📡 Heltec WiFi LoRa 32 V3 – Setup Arduino IDE (Brasil 915 MHz)
+# 📡 Heltec WiFi LoRa 32 V3
 
-Este guia mostra **passo a passo** como configurar o Arduino IDE para rodar um **exemplo LoRa TX/RX mínimo com OLED funcionando**, usando a **Heltec WiFi LoRa 32 V3** (SX1262).
+### Setup Arduino IDE + Exemplo LoRa TX/RX com OLED (Brasil – 915 MHz)
 
----
+Este documento descreve **passo a passo** como configurar o **Arduino IDE** para utilizar a placa **Heltec WiFi LoRa 32 V3**, rodando um **exemplo mínimo de transmissão (TX) e recepção (RX) LoRa**, com **OLED funcionando**, usando **frequência legal no Brasil (915 MHz)**.
 
-## 🧩 Hardware usado
-
-* **Placa:** Heltec WiFi LoRa 32 V3
-* **Chip LoRa:** SX1262
-* **Display:** OLED 0.96" 128×64
-* **Frequência Brasil:** **915 MHz**
-* **Antena:** obrigatória (não ligue sem antena)
+Nesse teste vamos usar duas placas Heltec WiFi LoRa 32 V3 identicas, uma como **transmissor (TX)** e outra como **receptor (RX)**.
 
 ---
 
-## 🛠️ 1. Instalar Arduino IDE
+## 🧩 Sobre a placa
 
-Recomendado:
+### 📌 Modelo
+
+**Heltec WiFi LoRa 32 V3**
+
+![placa](kit.jpeg)
+![kit aberto](kit-aberto.jpeg)
+![kit placa detalhe](placa-detalhe.jpeg)
+
+### 🏭 Fabricante
+
+**Heltec Automation**
+Site oficial: [https://heltec.org](https://heltec.org)
+
+### ⚙️ Principais componentes
+
+| Componente       | Descrição               |
+| ---------------- | ----------------------- |
+| MCU              | ESP32-S3                |
+| Rádio LoRa       | **SX1262**              |
+| Display          | OLED 0.96" 128×64       |
+| Conectividade    | WiFi + Bluetooth + LoRa |
+| Antena           | Conector IPEX / u.FL    |
+| Alimentação OLED | Controlada via **VEXT** |
+
+---
+
+## ⚠️ Avisos importantes (LEIA ANTES DE LIGAR)
+
+### 🚨 **NUNCA ligue a placa sem antena LoRa conectada**
+
+* O **SX1262 pode queimar** se transmitir sem antena
+* Mesmo testes rápidos podem danificar o estágio RF
+* Sempre conecte a antena **ANTES** de alimentar a placa
+
+---
+
+## 📏 Antena LoRa – tamanho correto
+
+O tamanho da antena depende da frequência:
+
+### 📡 915 MHz (Brasil)
+
+* Comprimento elétrico ideal (¼ de onda):
+
+```
+≈ 8,2 cm
+```
+
+![antena](kit-tamanho-da-antena.jpeg)
+
+Antenas comerciais de **8 a 9 cm** são ideais.
+
+⚠️ Antenas de 868 MHz funcionam **mal** em 915 MHz
+⚠️ Antenas muito curtas reduzem alcance e eficiência
+
+
+
+
+---
+
+## 🇧🇷 Frequência LoRa permitida no Brasil
+
+Segundo **ANATEL**, a faixa ISM permitida é:
+
+```
+902 MHz – 928 MHz
+```
+
+### ✅ Frequência recomendada
+
+```cpp
+#define RF_FREQUENCY 915000000
+```
+
+### ❌ NÃO use no Brasil
+
+* 433 MHz
+* 868 MHz (Europa)
+
+---
+
+## 🛠️ Requisitos de software
 
 * **Arduino IDE 2.x**
+* Linux, Windows ou macOS
+* Cabo USB-C de dados
 
-Baixe em:
+Download Arduino IDE:
 [https://www.arduino.cc/en/software](https://www.arduino.cc/en/software)
 
 ---
 
-## 🧠 2. Instalar suporte ESP32
+## 🧠 Instalação do suporte ESP32
 
-### Arduino IDE → Preferences
+### 1️⃣ Arduino IDE → Preferences
 
-Adicione no campo **Additional Boards Manager URLs**:
+Adicione em **Additional Boards Manager URLs**:
 
 ```text
 https://raw.githubusercontent.com/espressif/arduino-esp32/gh-pages/package_esp32_index.json
 ```
 
-Clique em **OK**.
-
 ---
 
-### Boards Manager
+### 2️⃣ Boards Manager
 
-* Vá em **Tools → Board → Boards Manager**
+* Abra **Tools → Board → Boards Manager**
 * Procure por **esp32**
 * Instale:
 
@@ -49,54 +124,46 @@ Clique em **OK**.
 esp32 by Espressif Systems
 ```
 
-Versão recomendada:
+✔ Versões recomendadas:
 
-* ✅ **2.0.14** ou **2.0.17**
-
----
-
-## 📦 3. Instalar bibliotecas corretas (CRÍTICO)
-
-### ❌ NÃO misture bibliotecas
-
-Use **APENAS** a biblioteca oficial da Heltec.
+* 2.0.14
+* 2.0.17
 
 ---
 
-### Library Manager
+## 📦 Biblioteca correta (CRÍTICO)
 
-Abra **Library Manager** e instale:
+### ✅ Instale APENAS
 
 ```
 Heltec ESP32 Dev-Boards
 ```
 
-Autor:
+Autor: **Heltec Automation**
 
-```
-Heltec Automation
-```
+Essa biblioteca **já inclui**:
 
-> ⚠️ NÃO instale:
->
-> * Heltec_ESP32_LoRa_v3 (terceiros)
-> * RadioLib separado
-> * Outras libs OLED
-
-Essa lib **já inclui**:
-
-* SX1262 (Radio)
+* Driver SX1262
+* Controle VEXT
 * OLED
-* VEXT
 * Pinagem correta da V3
 
 ---
 
-## 🧩 4. Selecionar a board correta
+### ❌ NÃO instale / NÃO use
+
+* Heltec_ESP32_LoRa_v3 (terceiros)
+* RadioLib separado
+* LoRa.h
+* Outras libs OLED
+
+Misturar bibliotecas **gera crash, Guru Meditation e conflitos de display**.
+
+---
+
+## 🧩 Seleção da placa
 
 ### Tools → Board
-
-Selecione:
 
 ```
 Heltec WiFi LoRa 32 (V3)
@@ -107,30 +174,31 @@ Heltec WiFi LoRa 32 (V3)
 | Opção            | Valor   |
 | ---------------- | ------- |
 | USB CDC On Boot  | Enabled |
-| Flash Frequency  | 80MHz   |
+| Flash Frequency  | 80 MHz  |
 | Flash Mode       | QIO     |
 | Partition Scheme | Default |
 | Upload Speed     | 921600  |
 
 ---
 
-## 🔌 5. Conectar a placa
+## 🔌 Conexão
 
-* Conecte via **USB-C**
-* Selecione a porta correta em **Tools → Port**
-* Conecte **a antena LoRa** antes de ligar
+1. Conecte a **antena LoRa**
+2. Conecte o **USB-C**
+3. Selecione a porta correta em **Tools → Port**
 
 ---
 
-## 📡 6. Exemplo mínimo – TX (915 MHz)
+## 📡 Exemplo mínimo – TRANSMISSOR (TX)
 
-Crie um sketch chamado `tx.ino`:
+![TX](tx.jpeg)
+
+Arquivo: `tx.ino`
 
 ```cpp
 #include "LoRaWan_APP.h"
 #include "HT_SSD1306Wire.h"
 
-// Frequência Brasil
 #define RF_FREQUENCY 915000000
 
 SSD1306Wire display(0x3C, 500000, SDA_OLED, SCL_OLED, GEOMETRY_128_64, RST_OLED);
@@ -144,7 +212,6 @@ void OnTxDone() {
 void setup() {
   Serial.begin(115200);
 
-  // Liga alimentação do OLED
   pinMode(Vext, OUTPUT);
   digitalWrite(Vext, LOW);
   delay(100);
@@ -155,7 +222,6 @@ void setup() {
   display.drawString(0, 12, "915 MHz BR");
   display.display();
 
-  // Inicializa placa Heltec
   Mcu.begin(HELTEC_BOARD, SLOW_CLK_TPYE);
 
   RadioEvents.TxDone = OnTxDone;
@@ -164,18 +230,8 @@ void setup() {
   Radio.SetChannel(RF_FREQUENCY);
   Radio.SetTxConfig(
     MODEM_LORA,
-    14,         // potência dBm
-    0,
-    0,          // 125 kHz
-    7,          // SF7
-    1,          // CR 4/5
-    8,
-    false,
-    true,
-    0,
-    0,
-    false,
-    3000
+    14, 0, 0, 7, 1, 8,
+    false, true, 0, 0, false, 3000
   );
 }
 
@@ -194,9 +250,9 @@ void loop() {
 
 ---
 
-## 📥 7. Exemplo mínimo – RX
+## 📥 Exemplo mínimo – RECEPTOR (RX)
 
-Crie um sketch chamado `rx.ino`:
+Arquivo: `rx.ino`
 
 ```cpp
 #include "LoRaWan_APP.h"
@@ -215,7 +271,7 @@ void OnRxDone(uint8_t *payload, uint16_t size, int16_t rssi, int8_t snr) {
 
   display.clear();
   display.drawString(0, 0, "RX:");
-  display.drawString(0, 12, (char *)payload);
+  display.drawString(0, 12, (char*)payload);
   display.drawString(0, 30, "RSSI:");
   display.drawString(40, 30, String(rssi));
   display.display();
@@ -244,19 +300,8 @@ void setup() {
   Radio.SetChannel(RF_FREQUENCY);
   Radio.SetRxConfig(
     MODEM_LORA,
-    0,
-    7,
-    1,
-    0,
-    8,
-    0,
-    false,
-    0,
-    true,
-    0,
-    0,
-    false,
-    true
+    0, 7, 1, 0, 8, 0,
+    false, 0, true, 0, 0, false, true
   );
 
   Radio.Rx(0);
@@ -269,27 +314,19 @@ void loop() {
 
 ---
 
-## ✅ 8. Teste final
+## ✅ Teste final
 
 1. Grave **RX** em uma placa
 2. Grave **TX** na outra
 3. Ambas em **915 MHz**
-4. OLED deve mostrar TX/RX
+4. OLED mostra TX / RX
 5. Serial Monitor confirma pacotes
-
----
-
-## 🚨 Erros comuns (evite)
-
-❌ Usar `LoRa.h`
-❌ Misturar RadioLib
-❌ Não ligar antena
-❌ Frequência 868 no Brasil
-❌ Criar outro `display` global (já existe na lib)
 
 ---
 
 ## 🧠 Conclusão
 
-* A **Heltec V3 funciona**, mas **só com o stack correto**
-* A lib oficial **já resolve VEXT, OLED, SX1262**
+* A **Heltec WiFi LoRa 32 V3 funciona perfeitamente**
+* O segredo é **usar só a biblioteca oficial**
+* VEXT + OLED + SX1262 **já estão resolvidos**
+* Frequência correta e antena correta evitam dor de cabeça
