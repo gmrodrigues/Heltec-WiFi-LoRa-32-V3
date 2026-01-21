@@ -16,7 +16,7 @@ Nesse teste vamos usar duas placas Heltec WiFi LoRa 32 V3 identicas, uma como **
 
 ![placa](./kit.jpeg)
 ![kit aberto](./kit-aberto.jpeg)
-![kit placa detalhe](./placa-detalhe.jpeg)
+![kit placa detalhe](./kit-placa-detalhe.jpeg)
 
 ### 🏭 Fabricante
 
