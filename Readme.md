@@ -14,9 +14,9 @@ Nesse teste vamos usar duas placas Heltec WiFi LoRa 32 V3 identicas, uma como **
 
 **Heltec WiFi LoRa 32 V3**
 
-![placa](kit.jpeg)
-![kit aberto](kit-aberto.jpeg)
-![kit placa detalhe](placa-detalhe.jpeg)
+![placa](./kit.jpeg)
+![kit aberto](./kit-aberto.jpeg)
+![kit placa detalhe](./placa-detalhe.jpeg)
 
 ### 🏭 Fabricante
 
@@ -58,7 +58,7 @@ O tamanho da antena depende da frequência:
 ≈ 8,2 cm
 ```
 
-![antena](kit-tamanho-da-antena.jpeg)
+![antena](./kit-tamanho-da-antena.jpeg)
 
 Antenas comerciais de **8 a 9 cm** são ideais.
 
@@ -191,7 +191,7 @@ Heltec WiFi LoRa 32 (V3)
 
 ## 📡 Exemplo mínimo – TRANSMISSOR (TX)
 
-![TX](tx.jpeg)
+![TX](./tx.jpeg)
 
 Arquivo: `tx.ino`
 
